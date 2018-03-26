@@ -1,12 +1,24 @@
 package main
 
+import (
+	"fmt"
+	"os"
+)
+
 const (
-	SERVER_FILENAME = ".gossh"
-	VERSION         = "0.1"
-	GITHUB_URL      = "https://github.com/i183/go-ssh"
+	serverFileName = ".gossh"
+	versionNumber  = "0.1"
+	githubUrl      = "https://github.com/i183/gossh"
 )
 
 func main() {
-	initServerFile() //Init server file
-	// TODO arg
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("gossh failed:", err)
+		}
+	}()
+
+	initServerFile()                //Init Server file
+	h := createHandler(os.Args[1:]) //create handler by args
+	h.execute()                     //call execute function
 }

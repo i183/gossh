@@ -9,12 +9,12 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
-type server struct {
-	serverName string //Server name
-	username   string //Username
-	ip         string //IP Address
-	port       string //Port
-	password   string //Password
+type Server struct {
+	ServerName string //Server name
+	Username   string //Username
+	IP         string //IP Address
+	Port       string //Port
+	Password   string //Password
 }
 
 type handler interface {
@@ -49,19 +49,19 @@ type help struct {
 func (conn *connection) execute() {
 	sv, ok := findServerByServerName(conn.serverName)
 	if !ok {
-		panic("Can not find server")
+		panic(fmt.Sprintf("Can not find Server \"%s\"", conn.serverName))
 	}
 	config := &ssh.ClientConfig{
-		User: sv.username,
+		User: sv.Username,
 		Auth: []ssh.AuthMethod{
-			ssh.Password(sv.password),
+			ssh.Password(sv.Password),
 		},
 		HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
 			return nil
 		},
 	}
 
-	client, err := ssh.Dial("tcp", sv.ip+":"+sv.port, config)
+	client, err := ssh.Dial("tcp", sv.IP+":"+sv.Port, config)
 	check(err)
 	defer client.Close()
 
@@ -99,12 +99,12 @@ func (conn *connection) execute() {
 }
 
 func (add *add) execute() {
-	sv := server{
-		serverName: add.serverName,
-		username:   add.username,
-		ip:         add.ip,
-		port:       add.port,
-		password:   add.password,
+	sv := Server{
+		ServerName: add.serverName,
+		Username:   add.username,
+		IP:         add.ip,
+		Port:       add.port,
+		Password:   add.password,
 	}
 
 	addServer(sv)
@@ -117,15 +117,15 @@ func (rm *remove) execute() {
 func (ls *list) execute() {
 	servers := readAllServer()
 	for _, sv := range servers {
-		fmt.Println(sv.serverName)
+		fmt.Println(sv.ServerName)
 	}
 }
 
 func (v *version) execute() {
-	fmt.Println("Version: ", VERSION)
-	fmt.Println("Github:", GITHUB_URL)
+	fmt.Println("Version:", versionNumber)
+	fmt.Println("Github:", githubUrl)
 }
 
 func (h *help) execute() {
-	// TODO implement me
+	fmt.Println("help")
 }
