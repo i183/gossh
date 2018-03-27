@@ -49,7 +49,7 @@ type help struct {
 func (conn *connection) execute() {
 	sv, ok := findServerByServerName(conn.serverName)
 	if !ok {
-		panic(fmt.Sprintf("Can not find Server \"%s\"", conn.serverName))
+		panic(fmt.Sprintf("Did not find the \"%s\" server", conn.serverName))
 	}
 	config := &ssh.ClientConfig{
 		User: sv.Username,
@@ -111,7 +111,9 @@ func (add *add) execute() {
 }
 
 func (rm *remove) execute() {
-	removeServerByServerName(rm.serverName)
+	if ok := removeServerByServerName(rm.serverName); !ok {
+		panic(fmt.Sprintf("Did not find the \"%s\" server", rm.serverName))
+	}
 }
 
 func (ls *list) execute() {
