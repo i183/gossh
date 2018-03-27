@@ -3,12 +3,9 @@ package main
 import (
 	"fmt"
 	"os"
-)
 
-const (
-	serverFileName = ".gossh"
-	versionNumber  = "0.1"
-	githubUrl      = "https://github.com/i183/gossh"
+	"github.com/i183/gossh/command"
+	"github.com/i183/gossh/server"
 )
 
 func main() {
@@ -18,7 +15,19 @@ func main() {
 		}
 	}()
 
-	initServerFile()                //Init Server file
-	h := createHandler(os.Args[1:]) //create handler by args
-	h.execute()                     //call execute function
+	server.InitServerFile() //Init Server file
+
+	var cmd string
+	var args []string
+	if len(os.Args) > 1 {
+		cmd = os.Args[1]
+		args = os.Args[2:]
+	}
+	h := command.CreateHandler(cmd) //create handler by command
+	if ok := h.Init(args); ok {
+		h.Execute()
+	} else {
+		h.Help()
+	}
+
 }

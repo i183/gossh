@@ -1,27 +1,39 @@
-package main
+package server
 
 import (
 	"bytes"
 	"encoding/json"
 	"os"
 	"os/user"
+
+	"github.com/i183/gossh/kit"
 )
 
-func initServerFile() {
+const serverFileName = ".gossh"
+
+type Server struct {
+	ServerName string //Server name
+	Username   string //Username
+	IP         string //IP Address
+	Port       int    //Port
+	Password   string //Password
+}
+
+func InitServerFile() {
 	if _, err := os.Stat(getServerFilePath()); err != nil {
 		if os.IsNotExist(err) {
 			var servers []Server
-			writeAllServer(servers)
+			WriteAll(servers)
 		} else {
-			check(err)
+			kit.Check(err)
 		}
 	}
 }
 
-func readAllServer() []Server {
+func ReadAll() []Server {
 	var servers []Server
 	file, err := os.Open(getServerFilePath())
-	check(err)
+	kit.Check(err)
 	defer file.Close()
 
 	decoder := json.NewDecoder(file)
@@ -29,28 +41,28 @@ func readAllServer() []Server {
 	return servers
 }
 
-func writeAllServer(servers []Server) {
+func WriteAll(servers []Server) {
 	bs, err := json.Marshal(servers)
-	check(err)
+	kit.Check(err)
 
 	var out bytes.Buffer
 	err = json.Indent(&out, bs, "", "\t")
-	check(err)
+	kit.Check(err)
 
 	file, err := os.Create(getServerFilePath())
 	defer file.Close()
 	out.WriteTo(file)
 }
 
-func addServer(sv Server) {
-	servers := readAllServer()
+func Add(sv Server) {
+	servers := ReadAll()
 	servers = append(servers, sv)
 
-	writeAllServer(servers)
+	WriteAll(servers)
 }
 
-func findServerByServerName(serverName string) (*Server, bool) {
-	servers := readAllServer()
+func FindByName(serverName string) (*Server, bool) {
+	servers := ReadAll()
 	for _, vs := range servers {
 		if vs.ServerName == serverName {
 			return &vs, true
@@ -61,12 +73,12 @@ func findServerByServerName(serverName string) (*Server, bool) {
 
 }
 
-func removeServerByServerName(serverName string) bool {
-	servers := readAllServer()
+func RemoveByName(serverName string) bool {
+	servers := ReadAll()
 	for i, sv := range servers {
 		if sv.ServerName == serverName {
 			servers = append(servers[:i], servers[i+1:]...)
-			writeAllServer(servers)
+			WriteAll(servers)
 			return true
 		}
 	}
@@ -76,6 +88,6 @@ func removeServerByServerName(serverName string) bool {
 
 func getServerFilePath() string {
 	user, err := user.Current()
-	check(err)
+	kit.Check(err)
 	return user.HomeDir + "/" + serverFileName
 }
