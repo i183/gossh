@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/i183/gossh/command"
@@ -8,6 +9,11 @@ import (
 )
 
 func main() {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("gossh failed:", err)
+		}
+	}()
 
 	server.InitServerFile() //Init Server file
 
