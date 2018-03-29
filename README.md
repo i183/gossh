@@ -4,7 +4,7 @@ Gossh is a remote client that makes up for the inability of terminal ssh to save
 
 ## Why use golang?
 
-Because golang does not require other dependencies or runtime environments, it only need the terminal
+Because golang does not require runtime environments, it only need the terminal
 
 ## Download
 [https://github.com/i183/gossh/releases](https://github.com/i183/gossh/releases)
