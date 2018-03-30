@@ -17,7 +17,7 @@ $ gossh add <SERVER_NAME> <USERNAME> <IP> <PORT> <PASSWORD>
 ```
 For example
 ````
-$ gossh add serverName root@127.0.0.1 22 password
+$ gossh add serverName root 127.0.0.1 22 password
 ````
 
 ### conn
