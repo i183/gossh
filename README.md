@@ -10,7 +10,7 @@ Because golang does not require runtime environments, it only need the terminal
 [https://github.com/i183/gossh/releases](https://github.com/i183/gossh/releases)
 
 ## Commands
-## add
+### add
 Add a remote server
 ```
 $ gossh add <SERVER_NAME> <USERNAME> <IP> <PORT> <PASSWORD>
