@@ -1,4 +1,4 @@
-[https://zhuanlan.zhihu.com/p/35138805](中文)
+[中文](https://zhuanlan.zhihu.com/p/35138805)
 
 ## Gossh
 
